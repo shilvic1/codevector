@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeVector - Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hero-gradient {
+      background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.15), transparent),
+                  radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.15), transparent);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 selection:bg-cyan-500/30">
+
+  <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      
+      <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+        <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+        <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+      </a>
+
+      <div class="hidden lg:flex items-center space-x-10">
+        <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+          <li><a href="index.html" class="text-cyan-400">Home</a></li>
+          <li><a href="tutorials.html" class="hover:text-cyan-400 transition">Tutorials</a></li>
+          <li><a href="challenges.html" class="hover:text-cyan-400 transition">Challenges</a></li>
+          <li><a href="projects.html" class="hover:text-cyan-400 transition">Projects</a></li>
+        </ul>
+        
+        <div class="flex items-center space-x-5">
+          <a href="login.html" class="text-sm font-bold hover:text-white transition">Login</a>
+          <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition shadow-lg shadow-cyan-500/20">
+            Sign Up
+          </a>
+        </div>
+      </div>
+
+      <button class="lg:hidden text-slate-400" id="mobile-btn">
+        <i class="fa-solid fa-bars-staggered text-2xl"></i>
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero-gradient pt-24 pb-32 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-8 tracking-tight">
+        Code with <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Precision.</span>
+      </h1>
+      <p class="text-xl text-slate-400 mb-12 leading-relaxed max-w-2xl mx-auto">
+        Elevate your workflow with AI-driven insights, competitive coding challenges, and a community of world-class engineers.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="signup.html" class="bg-white text-slate-950 px-10 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all transform hover:-translate-y-1">
+          Get Started Now
+        </a>
+        <a href="tutorials.html" class="bg-slate-800/50 text-white px-10 py-4 rounded-2xl font-bold border border-slate-700 hover:bg-slate-800 transition-all">
+          Browse Courses
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto py-24 px-6">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+      <div>
+        <h2 class="text-4xl font-extrabold text-white mb-4">Core Ecosystem</h2>
+        <p class="text-slate-400">Advanced tools designed for the modern developer.</p>
+      </div>
+      <div class="h-1 w-24 bg-cyan-500 rounded-full mb-2"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-cyan-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-cyan-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-microchip text-cyan-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">AI Copilot</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Real-time refactoring suggestions and bug-fixing logic powered by our custom-trained LLM.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-purple-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-terminal text-purple-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Native Editor</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Full-featured browser IDE with terminal access, Git integration, and hot-module reloading.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-emerald-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-map-location-dot text-emerald-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Career Tracks</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Curated learning paths for Frontend, Backend, AI Research, and DevOps engineering.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-orange-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-handshake-angle text-orange-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Live Collab</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Invite peers to your session for real-time pair programming with integrated voice chat.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-blue-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-trophy text-blue-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Global Rank</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Solve algorithmic puzzles and climb the leaderboard to earn exclusive developer badges.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl hover:border-pink-500/50 transition group relative overflow-hidden">
+        <div class="w-14 h-14 bg-pink-500/10 rounded-2xl flex items-center justify-center mb-8">
+          <i class="fa-solid fa-folder-open text-pink-400 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Showcase</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Deploy your projects directly to our CDN and showcase your portfolio to top recruiters.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-slate-900 border-t border-slate-800 py-12 px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center space-x-2">
+        <img src="Code Vector.png" alt="CodeVector Logo" class="h-6 w-6">
+        <span class="font-bold text-white text-sm tracking-tight uppercase">CodeVector &copy; 2026</span>
+      </div>
+      <div class="flex space-x-6">
+        <a href="https://github.com/shilvic1/codevector" target="_blank" class="text-slate-400 hover:text-cyan-400 transition-colors flex items-center space-x-2">
+          <i class="fa-brands fa-github text-2xl"></i>
+          <span class="text-sm font-medium">Contribute on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
