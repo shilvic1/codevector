@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenges | CodeVector Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .code-font { font-family: 'Fira Code', monospace; }
+    .hidden-section { display: none; }
+    
+    .hint-content { display: none; }
+    .hint-content.show { display: block; }
+
+    /* Workspace Hint Box */
+    #editor-hint-box {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease-out;
+      opacity: 0;
+    }
+    #editor-hint-box.open {
+      max-height: 150px;
+      opacity: 1;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+
+    /* Simple Syntax Highlight Look */
+    textarea {
+      background: #0d1117;
+      color: #79c0ff; /* Light blue for tags */
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+
+<nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+      <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+      <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center space-x-10">
+      <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+        <li><a href="index.html" class="hover:text-cyan-400 transition text-slate-400">Home</a></li>
+        <li><a href="tutorials.html" class="hover:text-cyan-400 transition text-slate-400">Tutorials</a></li>
+        <li><a href="challenges.html" class="hover:text-cyan-400 transition text-slate-400">Challenges</a></li>
+      </ul>
+      
+      <div id="auth-links" class="flex items-center space-x-5">
+        <a href="login.html" class="text-sm font-bold hover:text-white transition text-slate-400">Login</a>
+        <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Navbar Auth Detector
+  function updateNavbar() {
+    const authLinks = document.getElementById('auth-links');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (user) {
+      authLinks.innerHTML = `
+        <div class="flex items-center space-x-4">
+          <span class="text-slate-500 text-xs font-bold tracking-widest uppercase">Welcome, ${user.name.split(' ')[0]}</span>
+          <a href="account.html" class="bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center">
+            <i class="fa-solid fa-circle-user mr-2 text-cyan-400"></i> Account
+          </a>
+        </div>
+      `;
+    }
+  }
+  updateNavbar();
+</script>
+
+  <div id="dashboard-view">
+    <header class="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto text-center">
+          <h1 class="text-5xl font-extrabold text-white mb-6">Prove Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Prowess</span></h1>
+          <p class="text-slate-400 max-w-2xl mx-auto text-lg">Real-world projects to test your skills. Build it, break it, and perfect it.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-20 px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col hover:border-cyan-500/40 transition">
+          <div class="h-48 bg-slate-800 flex items-center justify-center relative">
+            <i class="fa-solid fa-house-chimney text-6xl text-cyan-500/20"></i>
+            <span class="absolute top-4 left-4 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-500/20">Easy</span>
+          </div>
+          <div class="p-8 flex-grow">
+            <h2 class="text-2xl font-bold text-white mb-4">Personal Home Page</h2>
+            <p class="text-slate-400 text-sm mb-6">Build a sleek landing page for a developer portfolio.</p>
+            <div class="mt-auto">
+              <button onclick="toggleDashHint('hint1')" class="text-cyan-400 text-xs font-bold flex items-center hover:text-cyan-300">
+                <i class="fa-solid fa-lightbulb mr-2"></i> NEED A HINT?
+              </button>
+              <div id="hint1" class="hint-content mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 italic">
+                Use <code class="text-cyan-300">display: flex</code> to center your hero text.
+              </div>
+            </div>
+          </div>
+          <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+            <button onclick="launchEditor('home')" class="w-full py-3 bg-white text-slate-950 font-bold rounded-xl hover:bg-slate-200 transition">Start Build</button>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col hover:border-purple-500/40 transition">
+            <div class="h-48 bg-slate-800 flex items-center justify-center relative">
+              <i class="fa-solid fa-book-open text-6xl text-purple-500/20"></i>
+              <span class="absolute top-4 left-4 bg-yellow-500/10 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow-500/20">Medium</span>
+            </div>
+            <div class="p-8 flex-grow">
+              <h2 class="text-2xl font-bold text-white mb-4">Facts Page</h2>
+              <p class="text-slate-400 text-sm mb-6">Create an interactive grid of facts about space.</p>
+              <div class="mt-auto">
+                <button onclick="toggleDashHint('hint2')" class="text-purple-400 text-xs font-bold flex items-center hover:text-purple-300">
+                  <i class="fa-solid fa-lightbulb mr-2"></i> NEED A HINT?
+                </button>
+                <div id="hint2" class="hint-content mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 italic">
+                    Use <code class="text-purple-300">grid-template-columns: repeat(3, 1fr)</code> for the grid layout.
+                </div>
+              </div>
+            </div>
+            <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+              <button onclick="launchEditor('facts')" class="w-full py-3 bg-white text-slate-950 font-bold rounded-xl hover:bg-slate-200 transition">Start Build</button>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col hover:border-orange-500/40 transition">
+            <div class="h-48 bg-slate-800 flex items-center justify-center relative">
+              <i class="fa-solid fa-calculator text-6xl text-orange-500/20"></i>
+              <span class="absolute top-4 left-4 bg-red-500/10 text-red-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-red-500/20">Hard</span>
+            </div>
+            <div class="p-8 flex-grow">
+              <h2 class="text-2xl font-bold text-white mb-4">Logic Calculator</h2>
+              <p class="text-slate-400 text-sm mb-6">Build a fully functional calculator with JS logic.</p>
+              <div class="mt-auto">
+                <button onclick="toggleDashHint('hint3')" class="text-orange-400 text-xs font-bold flex items-center hover:text-orange-300">
+                  <i class="fa-solid fa-lightbulb mr-2"></i> NEED A HINT?
+                </button>
+                <div id="hint3" class="hint-content mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 italic">
+                    Use <code class="text-orange-300">eval()</code> or a switch statement for calculations.
+                </div>
+              </div>
+            </div>
+            <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+              <button onclick="launchEditor('calc')" class="w-full py-3 bg-white text-slate-950 font-bold rounded-xl hover:bg-slate-200 transition">Start Build</button>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <section id="workspace-view" class="hidden-section max-w-[1600px] mx-auto py-8 px-6">
+    <div class="flex items-center justify-between mb-6">
+        <button onclick="closeEditor()" class="text-slate-500 hover:text-white transition flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-left"></i> <span class="text-xs font-bold uppercase">Back to Dashboard</span>
+        </button>
+        <h2 id="workspace-title" class="text-xl font-bold text-white">Project Editor</h2>
+        <div class="flex space-x-3">
+            <button onclick="toggleEditorHint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 px-4 py-2 rounded-lg text-xs font-bold border border-slate-700 transition">
+                <i class="fa-solid fa-lightbulb mr-1"></i> HINT
+            </button>
+            <button onclick="runCode()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition shadow-lg shadow-cyan-500/20">
+                Run Code <i class="fa-solid fa-play ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="editor-hint-box" class="bg-cyan-950/20 border border-cyan-500/30 rounded-2xl text-cyan-300 text-sm italic">
+        </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[75vh]">
+        <div class="flex flex-col bg-[#0d1117] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <div class="bg-slate-900 px-6 py-3 border-b border-slate-800 flex items-center space-x-2">
+                <span class="text-slate-400 text-[10px] font-mono font-bold tracking-widest uppercase">index.html</span>
+            </div>
+            <textarea id="code-input" class="flex-grow p-8 focus:outline-none resize-none code-font text-sm" spellcheck="false"></textarea>
+        </div>
+
+        <div class="flex flex-col bg-white rounded-3xl overflow-hidden shadow-2xl">
+            <div class="bg-slate-100 px-6 py-3 border-b border-slate-200 flex items-center justify-between">
+                <span class="text-slate-500 text-[10px] font-bold tracking-widest uppercase">Live Preview</span>
+                <i class="fa-solid fa-earth-americas text-slate-400 text-xs"></i>
+            </div>
+            <iframe id="preview-frame" class="flex-grow w-full border-none"></iframe>
+        </div>
+    </div>
+  </section>
+
+  <script>
+    const data = {
+        home: {
+            title: "Project: Personal Home Page",
+            hint: "💡 Try adding 'text-align: center' to your hero section to make the title pop!",
+            start: "\n<style>\n  body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }\n  h1 { color: #22d3ee; font-size: 3rem; }\n</style>\n\n<h1>Welcome to My World</h1>\n<p>I build amazing things with CodeVector.</p>"
+        },
+        facts: {
+            title: "Project: Space Facts Page",
+            hint: "💡 Use 'display: grid' on a container to start building your fact cards.",
+            start: "\n<style>\n  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }\n  .card { background: #eee; padding: 20px; border-radius: 10px; }\n</style>\n\n<div class='grid'>\n  <div class='card'>Fact 1: Space is silent.</div>\n  <div class='card'>Fact 2: Mars is red.</div>\n</div>"
+        },
+        calc: {
+            title: "Project: Logic Calculator",
+            hint: "💡 Create a function called 'calculate()' that uses document.getElementById to get the input value.",
+            start: "\n<input id='num' type='text' placeholder='0'>\n<button onclick='alert(\"Result: \" + eval(document.getElementById(\"num\").value))'>Calculate</button>"
+        }
+    };
+
+    function toggleDashHint(id) {
+        document.getElementById(id).classList.toggle('show');
+    }
+
+    function launchEditor(key) {
+        const project = data[key];
+        document.getElementById('dashboard-view').classList.add('hidden-section');
+        document.getElementById('workspace-view').classList.remove('hidden-section');
+        
+        document.getElementById('workspace-title').innerText = project.title;
+        document.getElementById('editor-hint-box').innerHTML = project.hint;
+        document.getElementById('code-input').value = project.start;
+        
+        // Initial Run
+        runCode();
+    }
+
+    function closeEditor() {
+        document.getElementById('workspace-view').classList.add('hidden-section');
+        document.getElementById('dashboard-view').classList.remove('hidden-section');
+    }
+
+    function toggleEditorHint() {
+        document.getElementById('editor-hint-box').classList.toggle('open');
+    }
+
+    function runCode() {
+        const code = document.getElementById('code-input').value;
+        const iframe = document.getElementById('preview-frame');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        iframeDoc.open();
+        iframeDoc.write(code);
+        iframeDoc.close();
+    }
+  </script>
+</body>
+</html>

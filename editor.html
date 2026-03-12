@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Editor | CodeVector</title>
+  <link rel="icon" href="Code Vector.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/material.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/monokai.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/ayu-mirage.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .CodeMirror {
+      height: 100%;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      background: transparent !important;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Custom Theme Variables */
+    .theme-dark { --bg-nav: #0f172a; --bg-sidebar: #0f172a; --bg-editor: #020617; --accent: #22d3ee; }
+    .theme-light { --bg-nav: #f8fafc; --bg-sidebar: #f1f5f9; --bg-editor: #ffffff; --accent: #0891b2; }
+    .theme-matrix { --bg-nav: #000; --bg-sidebar: #050505; --bg-editor: #000; --accent: #00ff41; }
+
+    body { background-color: var(--bg-editor); transition: background 0.3s; }
+    .sidebar-active { color: var(--accent); background: rgba(34, 211, 238, 0.05); border-right: 2px solid var(--accent); }
+  </style>
+</head>
+<body class="theme-dark text-slate-300 h-screen flex flex-col overflow-hidden">
+
+  <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-3 flex justify-between items-center">
+    <div class="flex items-center space-x-6">
+      <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+        <img src="Code Vector.png" alt="Logo" class="h-8 w-8 rounded shadow-lg shadow-cyan-500/20">
+        <span class="text-xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+      </a>
+      <div class="h-4 w-[1px] bg-slate-700 mx-2"></div>
+      <div class="flex items-center space-x-4 text-xs font-bold uppercase tracking-widest text-slate-500">
+          <span id="project-label">Project: Untitled</span>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <select id="theme-selector" class="bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded-lg border border-slate-700 focus:outline-none focus:border-cyan-500">
+        <option value="dark">Dark Mode</option>
+        <option value="light">Light Mode</option>
+        <option value="matrix">Matrix</option>
+      </select>
+      <button id="back-to-projects" class="text-slate-400 hover:text-white text-xs font-bold uppercase tracking-widest transition">
+        <i class="fa-solid fa-arrow-left mr-2"></i> Exit
+      </button>
+    </div>
+  </nav>
+
+  <div class="flex flex-1 overflow-hidden">
+    
+    <aside id="sidebar" class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col">
+      <div class="p-4 flex items-center justify-between border-b border-slate-800">
+        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Explorer</span>
+        <button id="create-file-btn" class="text-slate-500 hover:text-cyan-400 transition">
+            <i class="fa-solid fa-file-circle-plus"></i>
+        </button>
+      </div>
+      
+      <div class="p-4 space-y-2">
+          <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-600"></i>
+              <input type="text" id="file-search" placeholder="Search files..." class="w-full bg-slate-950 border border-slate-800 rounded-md py-2 pl-8 pr-3 text-[11px] focus:outline-none focus:border-cyan-500/50">
+          </div>
+      </div>
+
+      <ul id="file-tree" class="flex-1 overflow-y-auto px-2 space-y-1"></ul>
+
+      <div class="p-4 bg-slate-950/50 border-t border-slate-800">
+          <button id="import-file-btn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-lg transition">
+              <i class="fa-solid fa-upload mr-2"></i> Import
+          </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col bg-slate-950 relative">
+        
+        <div class="flex bg-slate-900 border-b border-slate-800 overflow-x-auto">
+            <div id="active-tab" class="bg-slate-950 border-t-2 border-cyan-400 px-6 py-3 flex items-center space-x-3">
+                <i class="fa-solid fa-code text-cyan-400 text-xs"></i>
+                <span id="current-file-name" class="text-xs font-bold text-white">Untitled.js</span>
+            </div>
+        </div>
+
+        <div class="px-6 py-2 bg-slate-900/50 border-b border-slate-800/50 flex items-center space-x-2 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+            <i class="fa-solid fa-folder-open"></i>
+            <span>Root</span>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-slate-300" id="breadcrumb-file">Untitled.js</span>
+        </div>
+
+        <div id="code-editor" class="flex-1 overflow-hidden relative">
+            <div id="search-bar" class="hidden absolute top-4 right-4 z-10 bg-slate-800 border border-slate-700 p-2 rounded-xl shadow-2xl w-64">
+                <input type="text" id="search-input" placeholder="Find in file..." class="w-full bg-slate-950 border border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none">
+            </div>
+        </div>
+
+        <div class="p-4 flex items-center justify-between border-t border-slate-800 bg-slate-900">
+            <div class="flex items-center space-x-6">
+                <span class="text-[10px] font-bold text-slate-500 uppercase"><i class="fa-solid fa-terminal mr-2"></i> Status: <span class="text-emerald-500">Ready</span></span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="preview-btn" class="px-6 py-2 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition">
+                    <i class="fa-solid fa-play mr-2"></i> Live Preview
+                </button>
+                <button id="save-btn" class="px-8 py-2 bg-cyan-500 text-slate-950 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-cyan-400 shadow-lg shadow-cyan-500/20 transition">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/css/css.min.js"></script>
+
+  <script>
+    // 1. Data Loading
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get("projectId") || params.get("id");
+    const projects = JSON.parse(localStorage.getItem("projects")) || [];
+    const project = projects.find((p) => p.id == projectId);
+
+    if (!project) {
+        alert("System Error: Project reference missing.");
+        window.location.href = "projects.html";
+    }
+
+    document.getElementById('project-label').innerText = `Project: ${project.name}`;
+
+    if (!project.files) {
+        project.files = {
+            "index.html": "\n<h1>Hello CodeVector</h1>",
+            "styles.css": "body { background: #020617; color: white; }",
+            "main.js": "console.log('Project Initialized');"
+        };
+        saveState();
+    }
+
+    function saveState() {
+        localStorage.setItem("projects", JSON.stringify(projects));
+    }
+
+    // 2. Editor Initialization
+    let selectedFile = Object.keys(project.files)[0];
+    const editor = CodeMirror(document.getElementById("code-editor"), {
+        value: project.files[selectedFile],
+        mode: "javascript",
+        theme: "material",
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: {"Ctrl-Space": "autocomplete"}
+    });
+
+    // 3. UI Functions
+    function renderFileTree() {
+        const tree = document.getElementById("file-tree");
+        tree.innerHTML = "";
+        
+        Object.keys(project.files).forEach(name => {
+            const isSelected = name === selectedFile;
+            const li = document.createElement("li");
+            li.className = `group flex items-center justify-between p-2.5 rounded-lg cursor-pointer transition ${isSelected ? 'sidebar-active' : 'hover:bg-slate-800/50 text-slate-500'}`;
+            
+            // Icon logic
+            let icon = "fa-file-code";
+            if(name.endsWith('.html')) icon = "fa-brands fa-html5 text-orange-500";
+            if(name.endsWith('.css')) icon = "fa-brands fa-css3-alt text-blue-500";
+            if(name.endsWith('.js')) icon = "fa-brands fa-js text-yellow-500";
+
+            li.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid ${icon} text-sm"></i>
+                    <span class="text-[11px] font-bold">${name}</span>
+                </div>
+                <div class="hidden group-hover:flex items-center space-x-2">
+                    <button onclick="renameFile('${name}')" class="hover:text-cyan-400"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                    <button onclick="deleteFile('${name}')" class="hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                </div>
+            `;
+            li.onclick = (e) => { if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'I') selectFile(name); };
+            tree.appendChild(li);
+        });
+    }
+
+    function selectFile(name) {
+        selectedFile = name;
+        editor.setValue(project.files[name]);
+        document.getElementById('current-file-name').innerText = name;
+        document.getElementById('breadcrumb-file').innerText = name;
+        
+        // Auto-detect mode
+        const ext = name.split('.').pop();
+        const modes = { 'html': 'xml', 'css': 'css', 'js': 'javascript' };
+        editor.setOption("mode", modes[ext] || 'javascript');
+        
+        renderFileTree();
+    }
+
+    // 4. File Operations
+    function renameFile(name) {
+        const newName = prompt("Rename file:", name);
+        if(newName && newName !== name) {
+            project.files[newName] = project.files[name];
+            delete project.files[name];
+            if(selectedFile === name) selectedFile = newName;
+            saveState();
+            renderFileTree();
+            selectFile(selectedFile);
+        }
+    }
+
+    function deleteFile(name) {
+        if(confirm(`Purge ${name}?`)) {
+            delete project.files[name];
+            const remaining = Object.keys(project.files);
+            if(remaining.length > 0) selectFile(remaining[0]);
+            saveState();
+            renderFileTree();
+        }
+    }
+
+    document.getElementById('create-file-btn').onclick = () => {
+        const name = prompt("New file name (e.g. app.js):");
+        if(name) {
+            project.files[name] = "";
+            saveState();
+            renderFileTree();
+            selectFile(name);
+        }
+    };
+
+    document.getElementById('save-btn').onclick = () => {
+        project.files[selectedFile] = editor.getValue();
+        saveState();
+        alert("Buffer synchronized to storage.");
+    };
+
+    // 5. Theme & Preview
+    document.getElementById('theme-selector').onchange = (e) => {
+        const theme = e.target.value;
+        document.body.className = `theme-${theme} text-slate-300 h-screen flex flex-col overflow-hidden`;
+        const cmThemes = { 'dark': 'material', 'light': 'eclipse', 'matrix': 'ayu-mirage' };
+        editor.setOption("theme", cmThemes[theme]);
+    };
+
+    document.getElementById('preview-btn').onclick = () => {
+        const win = window.open("", "_blank");
+        const html = project.files["index.html"] || "No index.html found";
+        const css = `<style>${project.files["styles.css"] || ""}</style>`;
+        const js = `<script>${project.files["main.js"] || project.files["script.js"] || ""}<\/script>`;
+        win.document.write(`<!DOCTYPE html><html><head>${css}</head><body>${html}${js}</body></html>`);
+        win.document.close();
+    };
+
+    document.getElementById('back-to-projects').onclick = () => window.location.href = "projects.html";
+
+    // Search Toggle (Ctrl + F)
+    window.addEventListener('keydown', (e) => {
+        if(e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            const bar = document.getElementById('search-bar');
+            bar.classList.toggle('hidden');
+            if(!bar.classList.contains('hidden')) document.getElementById('search-input').focus();
+        }
+    });
+
+    renderFileTree();
+    selectFile(selectedFile);
+  </script>
+</body>
+</html>

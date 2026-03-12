@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorials | CodeVector Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hidden-section { display: none; }
+    .active-lesson { 
+      background-color: rgba(34, 211, 238, 0.1); 
+      color: #22d3ee; 
+      border-left: 4px solid #22d3ee; 
+      font-weight: 700;
+    }
+    /* Smooth scroll for sidebar */
+    #lesson-list::-webkit-scrollbar { width: 4px; }
+    #lesson-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+
+ <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+      <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+      <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center space-x-10">
+      <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+        <li><a href="index.html" class="hover:text-cyan-400 transition text-slate-400">Home</a></li>
+        <li><a href="tutorials.html" class="hover:text-cyan-400 transition text-slate-400">Tutorials</a></li>
+        <li><a href="challenges.html" class="hover:text-cyan-400 transition text-slate-400">Challenges</a></li>
+      </ul>
+      
+      <div id="auth-links" class="flex items-center space-x-5">
+        <a href="login.html" class="text-sm font-bold hover:text-white transition text-slate-400">Login</a>
+        <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Navbar Auth Detector
+  function updateNavbar() {
+    const authLinks = document.getElementById('auth-links');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (user) {
+      authLinks.innerHTML = `
+        <div class="flex items-center space-x-4">
+          <span class="text-slate-500 text-xs font-bold tracking-widest uppercase">Welcome, ${user.name.split(' ')[0]}</span>
+          <a href="account.html" class="bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center">
+            <i class="fa-solid fa-circle-user mr-2 text-cyan-400"></i> Account
+          </a>
+        </div>
+      `;
+    }
+  }
+  updateNavbar();
+</script>
+
+  <header class="py-16 px-6 bg-slate-900/30 border-b border-slate-800" id="page-header">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 italic tracking-tight">Level Up Your <span class="text-cyan-400 underline decoration-slate-700">Skills</span></h1>
+      <p class="text-slate-400 max-w-2xl text-lg">Comprehensive curriculum designed to take you from zero to production-ready developer.</p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto py-16 px-6" id="track-selection">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl hover:border-orange-500/50 transition-all group">
+        <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-8"><i class="fa-brands fa-html5 text-orange-500 text-4xl"></i></div>
+        <h2 class="text-2xl font-bold text-white mb-2">HTML Masterclass</h2>
+        <p class="text-slate-500 text-sm mb-6">10 Modules • Structure & SEO</p>
+        <button onclick="showTrack('html')" class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl transition shadow-lg shadow-orange-900/20">Start HTML Track</button>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl hover:border-blue-500/50 transition-all group">
+        <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8"><i class="fa-brands fa-css3-alt text-blue-500 text-4xl"></i></div>
+        <h2 class="text-2xl font-bold text-white mb-2">Advanced CSS</h2>
+        <p class="text-slate-500 text-sm mb-6">12 Modules • Grid, Flex & Anim</p>
+        <button onclick="showTrack('css')" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">Start CSS Track</button>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl hover:border-yellow-500/50 transition-all group">
+        <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center mb-8"><i class="fa-brands fa-js text-yellow-500 text-4xl"></i></div>
+        <h2 class="text-2xl font-bold text-white mb-2">Modern JavaScript</h2>
+        <p class="text-slate-500 text-sm mb-6">15 Modules • ES6+, Async & APIs</p>
+        <button onclick="showTrack('js')" class="w-full py-3 bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-bold rounded-xl transition shadow-lg shadow-yellow-900/20">Start JS Track</button>
+      </div>
+    </div>
+  </main>
+
+  <section id="lesson-section" class="hidden-section max-w-7xl mx-auto py-12 px-6">
+    <button onclick="goBack()" class="text-slate-500 hover:text-cyan-400 mb-8 transition flex items-center space-x-2 font-bold uppercase text-xs tracking-widest">
+      <i class="fa-solid fa-arrow-left"></i> <span>All Tracks</span>
+    </button>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <aside class="lg:col-span-1">
+        <div class="p-4 bg-slate-900/50 rounded-2xl border border-slate-800 sticky top-28 backdrop-blur-sm">
+          <h3 id="sidebar-title" class="text-white font-extrabold mb-6 uppercase text-[10px] tracking-[0.2em] border-b border-slate-800 pb-4">Course Modules</h3>
+          <ul id="lesson-list" class="space-y-1 max-h-[60vh] overflow-y-auto pr-2">
+            </ul>
+        </div>
+      </aside>
+
+      <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 min-h-[600px] shadow-2xl">
+        <div class="flex items-center justify-between mb-8">
+            <span id="content-tag" class="px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-[10px] font-black uppercase tracking-widest border border-cyan-500/20">Module 01</span>
+            <div class="flex space-x-2">
+                <div class="w-2 h-2 rounded-full bg-slate-700"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-700"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-700"></div>
+            </div>
+        </div>
+        <h2 id="content-title" class="text-4xl font-extrabold text-white mb-8 tracking-tight">Introduction</h2>
+        <div id="content-body" class="text-slate-400 leading-relaxed text-lg space-y-6">
+          </div>
+        
+        <div class="mt-12 p-6 bg-black rounded-2xl border border-slate-800 font-mono text-sm relative group">
+          <div class="absolute top-4 right-4 text-slate-600 group-hover:text-cyan-400 transition cursor-pointer"><i class="fa-regular fa-copy"></i></div>
+          <span class="text-slate-600 block mb-4">// Live Example:</span>
+          <div id="code-snippet" class="text-cyan-300">
+            &lt;div class="container"&gt;<br>
+            &nbsp;&nbsp;&lt;h1&gt;Happy Coding!&lt;/h1&gt;<br>
+            &lt;/div&gt;
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const data = {
+      html: {
+        lessons: [
+          { name: "Basics & Boilerplate", content: "Before writing content, every HTML file needs a boilerplate. We'll explore the !DOCTYPE, head, and body tags which form the skeleton of every website.", code: "&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;...&lt;/head&gt;\n  &lt;body&gt;...&lt;/body&gt;\n&lt;/html&gt;" },
+          { name: "Headings & Paragraphs", content: "HTML provides 6 levels of headings (h1-h6). Learn when to use them for hierarchy and SEO, and how to wrap your text in paragraph (p) tags.", code: "&lt;h1&gt;Main Title&lt;/h1&gt;\n&lt;p&gt;This is a paragraph.&lt;/p&gt;" },
+          { name: "Links & Navigation", content: "The 'a' tag (anchor) is what makes the web a web. Learn how to link to external sites, internal pages, and even specific sections of the same page.", code: "&lt;a href='https://google.com'&gt;Visit Google&lt;/a&gt;" },
+          { name: "Images & Alt Text", content: "Visuals matter. Learn how to embed images and why 'alt' text is crucial for accessibility and screen readers.", code: "&lt;img src='logo.png' alt='Company Logo'&gt;" },
+          { name: "Lists (Ordered & Unordered)", content: "Organize data using 'ul' for bullet points and 'ol' for numbered lists. Perfect for navbars and feature lists.", code: "&lt;ul&gt;\n  &lt;li&gt;Item 1&lt;/li&gt;\n&lt;/ul&gt;" },
+          { name: "Semantic Elements", content: "Modern HTML uses tags like &lt;header&gt;, &lt;footer&gt;, and &lt;section&gt; to describe content meaning, not just appearance.", code: "&lt;header&gt;\n  &lt;nav&gt;...&lt;/nav&gt;\n&lt;/header&gt;" },
+          { name: "Forms & Labels", content: "Capture user input. We'll build a contact form using input types, textareas, and the labels that connect them.", code: "&lt;form&gt;\n  &lt;label&gt;Name:&lt;/label&gt;\n  &lt;input type='text'&gt;\n&lt;/form&gt;" },
+          { name: "Input Types (Advanced)", content: "HTML5 added powerful inputs like 'color', 'date', 'range', and 'email' that handle validation automatically.", code: "&lt;input type='date'&gt;\n&lt;input type='range'&gt;" },
+          { name: "Meta Tags & SEO", content: "The invisible part of HTML. Meta tags control how your site looks on social media and how Google indexes your pages.", code: "&lt;meta name='description' content='...'&gt;" },
+          { name: "Tables & Data", content: "Learn to display tabular data properly using 'table', 'tr', 'th', and 'td' elements.", code: "&lt;table&gt;\n  &lt;tr&gt;&lt;td&gt;Data&lt;/td&gt;&lt;/tr&gt;\n&lt;/table&gt;" }
+        ]
+      },
+      css: {
+        lessons: [
+          { name: "The Box Model", content: "The most important concept in CSS. Margin, Border, Padding, and Content define how every single element is sized.", code: ".box {\n  margin: 20px;\n  padding: 10px;\n  border: 1px solid white;\n}" },
+          { name: "Colors & Backgrounds", content: "Master Hex, RGB, and HSL colors, along with gradients and background images.", code: "body {\n  background: linear-gradient(to right, #333, #000);\n}" },
+          { name: "Typography Basics", content: "Control your fonts. Learn font-family, font-weight, line-height, and letter-spacing for a professional look.", code: "h1 {\n  font-size: 2rem;\n  letter-spacing: -1px;\n}" },
+          { name: "Positioning (Static to Sticky)", content: "Learn the difference between Relative, Absolute, Fixed, and the powerful Sticky positioning.", code: ".nav {\n  position: sticky;\n  top: 0;\n}" },
+          { name: "Flexbox Layouts", content: "The modern way to align items in a row or column. Say goodbye to 'float' and 'clear'.", code: ".parent {\n  display: flex;\n  justify-content: space-between;\n}" },
+          { name: "CSS Grid (2D Layouts)", content: "Grid allows you to build complex newspaper-style layouts with rows and columns working together.", code: ".grid {\n  display: grid;\n  grid-template-columns: 1fr 2fr;\n}" },
+          { name: "Transitions & States", content: "Animate your buttons and links with 'transition' and pseudo-classes like :hover and :active.", code: "button:hover {\n  background: cyan;\n  transition: 0.3s;\n}" },
+          { name: "Keyframe Animations", content: "Create complex, looping animations that run automatically when the page loads.", code: "@keyframes slide {\n  from { left: 0; } to { left: 100px; }\n}" },
+          { name: "Media Queries", content: "Responsive design. Learn how to change your layout based on the user's screen width.", code: "@media (max-width: 768px) {\n  .sidebar { display: none; }\n}" },
+          { name: "Variables (Custom Props)", content: "Clean up your CSS by using variables for colors and spacing constants.", code: ":root {\n  --brand-color: #22d3ee;\n}\n.text { color: var(--brand-color); }" }
+        ]
+      },
+      js: {
+        lessons: [
+          { name: "Variables (let vs const)", content: "Learn how to store data. We'll focus on modern ES6 declarations and why we rarely use 'var' anymore.", code: "const name = 'CodeVector';\nlet score = 0;" },
+          { name: "Strings & Template Literals", content: "Manipulate text and use backticks (`) to inject variables directly into your strings.", code: "console.log(`Hello, ${name}!`);" },
+          { name: "Functions (Arrow Syntax)", content: "The shorthand for writing logic. We'll explore parameters and return values.", code: "const add = (a, b) => a + b;" },
+          { name: "Conditional Logic", content: "Use If/Else and Switch statements to make your code smart and reactive.", code: "if (score > 10) { win(); }" },
+          { name: "Arrays & Iteration", content: "Store lists of data and use .forEach() or .map() to loop through them efficiently.", code: "const tools = ['HTML', 'CSS'];\ntools.map(t => console.log(t));" },
+          { name: "Objects & Destructuring", content: "Objects store complex data. Learn how to extract values quickly using destructuring.", code: "const { title, id } = lesson;" },
+          { name: "DOM: Selecting Elements", content: "Connecting JS to HTML. Learn querySelector and getElementById to find things on your page.", code: "const btn = document.querySelector('.btn');" },
+          { name: "DOM: Event Listeners", content: "Make your site react to clicks, keypresses, and scrolls.", code: "btn.addEventListener('click', () => {});" },
+          { name: "Async/Await & Fetch", content: "Learn how to get data from real-world APIs without freezing the browser.", code: "const res = await fetch(url);\nconst data = await res.json();" },
+          { name: "LocalStorage", content: "Save user data directly in the browser so it's still there when they refresh the page.", code: "localStorage.setItem('theme', 'dark');" }
+        ]
+      }
+    };
+
+    let activeTrack = '';
+
+    function showTrack(trackKey) {
+      activeTrack = trackKey;
+      document.getElementById('track-selection').classList.add('hidden-section');
+      document.getElementById('page-header').classList.add('hidden-section');
+      document.getElementById('lesson-section').classList.remove('hidden-section');
+
+      const list = document.getElementById('lesson-list');
+      list.innerHTML = "";
+      
+      data[trackKey].lessons.forEach((lesson, index) => {
+        const li = document.createElement('li');
+        li.className = "p-3 rounded-xl cursor-pointer transition text-[13px] hover:bg-slate-800/50 text-slate-400 group flex items-center justify-between";
+        li.innerHTML = `<span>${lesson.name}</span> <i class="fa-solid fa-play text-[10px] opacity-0 group-hover:opacity-100 text-cyan-500"></i>`;
+        li.onclick = () => selectLesson(index);
+        li.id = `lesson-item-${index}`;
+        list.appendChild(li);
+      });
+
+      selectLesson(0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectLesson(index) {
+      document.querySelectorAll('#lesson-list li').forEach(item => item.classList.remove('active-lesson'));
+      document.getElementById(`lesson-item-${index}`).classList.add('active-lesson');
+
+      const lesson = data[activeTrack].lessons[index];
+      document.getElementById('content-tag').innerText = `Module ${String(index + 1).padStart(2, '0')}`;
+      document.getElementById('content-title').innerText = lesson.name;
+      document.getElementById('content-body').innerHTML = `<p>${lesson.content}</p>`;
+      document.getElementById('code-snippet').innerHTML = lesson.code.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
+    }
+
+    function goBack() {
+      document.getElementById('track-selection').classList.remove('hidden-section');
+      document.getElementById('page-header').classList.remove('hidden-section');
+      document.getElementById('lesson-section').classList.add('hidden-section');
+    }
+  </script>
+</body>
+</html>

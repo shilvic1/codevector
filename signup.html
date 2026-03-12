@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | CodeVector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col">
+
+<nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+      <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+      <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center space-x-10">
+      <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+        <li><a href="index.html" class="hover:text-cyan-400 transition text-slate-400">Home</a></li>
+        <li><a href="tutorials.html" class="hover:text-cyan-400 transition text-slate-400">Tutorials</a></li>
+        <li><a href="challenges.html" class="hover:text-cyan-400 transition text-slate-400">Challenges</a></li>
+      </ul>
+      
+      <div id="auth-links" class="flex items-center space-x-5">
+        <a href="login.html" class="text-sm font-bold hover:text-white transition text-slate-400">Login</a>
+        <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Navbar Auth Detector
+  function updateNavbar() {
+    const authLinks = document.getElementById('auth-links');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (user) {
+      authLinks.innerHTML = `
+        <div class="flex items-center space-x-4">
+          <span class="text-slate-500 text-xs font-bold tracking-widest uppercase">Welcome, ${user.name.split(' ')[0]}</span>
+          <a href="account.html" class="bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center">
+            <i class="fa-solid fa-circle-user mr-2 text-cyan-400"></i> Account
+          </a>
+        </div>
+      `;
+    }
+  }
+  updateNavbar();
+</script>
+
+  <main class="flex-grow flex items-center justify-center px-6 py-20 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] -z-10"></div>
+
+    <div class="glass w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-white mb-2">Create Account</h1>
+        <p class="text-slate-400 text-sm">Join the elite circle of <span class="text-cyan-400">CodeVector</span> developers.</p>
+      </div>
+
+      <form id="signupForm" class="space-y-6">
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2 ml-1">Full Name</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="text" id="name" required 
+              class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition"
+              placeholder="John Doe">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2 ml-1">Email Address</label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="email" id="email" required 
+              class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition"
+              placeholder="name@company.com">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2 ml-1">Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="password" id="password" required 
+              class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition"
+              placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit" 
+          class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-4 rounded-2xl transition shadow-lg shadow-cyan-500/20 uppercase tracking-widest text-sm">
+          Initialize Account
+        </button>
+
+        <div class="text-center pt-4">
+          <p class="text-slate-500 text-sm">
+            Already have an account? 
+            <a href="login.html" class="text-cyan-400 font-bold hover:underline ml-1">Log In</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // 1. Check if user is already "logged in" on page load
+    window.onload = function() {
+      const activeUser = localStorage.getItem('currentUser');
+      if (activeUser) {
+        // If logged in, show a message and redirect to tutorials
+        document.querySelector('main').innerHTML = `
+          <div class="glass p-10 rounded-[2.5rem] text-center max-w-md">
+            <i class="fa-solid fa-circle-check text-cyan-400 text-5xl mb-6"></i>
+            <h2 class="text-2xl font-bold text-white mb-2">Already Logged In</h2>
+            <p class="text-slate-400 mb-8">You are already signed in as <span class="text-white font-bold">${JSON.parse(activeUser).name}</span>.</p>
+            <a href="tutorials.html" class="inline-block bg-cyan-500 text-slate-950 px-8 py-3 rounded-xl font-bold">Go to Dashboard</a>
+            <button onclick="logout()" class="block w-full mt-4 text-slate-500 text-xs hover:text-white uppercase font-bold tracking-widest">Sign Out</button>
+          </div>
+        `;
+      }
+    };
+
+    // 2. Handle Form Submission
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Simple Object for LocalStorage
+      const userData = {
+        name: name,
+        email: email,
+        password: password
+      };
+
+      // Save to LocalStorage
+      // In a real app, you'd push to an array, but here we save one primary user
+      localStorage.setItem('codeVector_User', JSON.stringify(userData));
+      
+      // Also set them as "currently logged in"
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+
+      alert('Account Created Successfully!');
+      
+      // Redirect to the Welcome (Tutorials) page
+      window.location.href = 'account.html';
+    });
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>

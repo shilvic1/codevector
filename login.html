@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | CodeVector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col">
+
+<nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+      <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+      <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center space-x-10">
+      <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+        <li><a href="index.html" class="hover:text-cyan-400 transition text-slate-400">Home</a></li>
+        <li><a href="tutorials.html" class="hover:text-cyan-400 transition text-slate-400">Tutorials</a></li>
+        <li><a href="challenges.html" class="hover:text-cyan-400 transition text-slate-400">Challenges</a></li>
+      </ul>
+      
+      <div id="auth-links" class="flex items-center space-x-5">
+        <a href="login.html" class="text-sm font-bold hover:text-white transition text-slate-400">Login</a>
+        <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Navbar Auth Detector
+  function updateNavbar() {
+    const authLinks = document.getElementById('auth-links');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (user) {
+      authLinks.innerHTML = `
+        <div class="flex items-center space-x-4">
+          <span class="text-slate-500 text-xs font-bold tracking-widest uppercase">Welcome, ${user.name.split(' ')[0]}</span>
+          <a href="account.html" class="bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center">
+            <i class="fa-solid fa-circle-user mr-2 text-cyan-400"></i> Account
+          </a>
+        </div>
+      `;
+    }
+  }
+  updateNavbar();
+</script>
+
+  <main class="flex-grow flex items-center justify-center px-6 py-20 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] -z-10"></div>
+
+    <div id="login-card" class="glass w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-white mb-2">Welcome Back</h1>
+        <p class="text-slate-400 text-sm">Enter your credentials to access the <span class="text-purple-400">Vector</span>.</p>
+      </div>
+
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2 ml-1">Email Address</label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="email" id="loginEmail" required 
+              class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 transition"
+              placeholder="name@company.com">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2 ml-1">Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input type="password" id="loginPassword" required 
+              class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 transition"
+              placeholder="••••••••">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs">
+            <label class="flex items-center text-slate-400 cursor-pointer">
+                <input type="checkbox" class="mr-2 accent-purple-500"> Remember me
+            </label>
+            <a href="#" class="text-purple-400 hover:underline">Forgot Password?</a>
+        </div>
+
+        <button type="submit" 
+          class="w-full bg-purple-500 hover:bg-purple-400 text-white font-black py-4 rounded-2xl transition shadow-lg shadow-purple-500/20 uppercase tracking-widest text-sm">
+          Access Terminal
+        </button>
+
+        <div class="text-center pt-4">
+          <p class="text-slate-500 text-sm">
+            New to the hub? 
+            <a href="signup.html" class="text-purple-400 font-bold hover:underline ml-1">Create Account</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // 1. Check if already logged in
+    window.onload = function() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            const user = JSON.parse(currentUser);
+            document.getElementById('login-card').innerHTML = `
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-user-check text-purple-400 text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Already Active</h2>
+                    <p class="text-slate-400 mb-8">System shows an active session for <span class="text-white">${user.name}</span>.</p>
+                    <a href="tutorials.html" class="inline-block w-full bg-purple-500 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs mb-4">Go to Dashboard</a>
+                    <button onclick="logout()" class="text-slate-500 text-[10px] font-bold uppercase tracking-widest hover:text-red-400 transition">Terminate Session (Logout)</button>
+                </div>
+            `;
+        }
+    };
+
+    // 2. Verification Logic
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Retrieve stored user data
+        const storedUserData = localStorage.getItem('codeVector_User');
+
+        if (!storedUserData) {
+            alert("No account found with this email. Please sign up first.");
+            return;
+        }
+
+        const user = JSON.parse(storedUserData);
+
+        // Verify Credentials
+        if (user.email === email && user.password === password) {
+            // Success: Log them in
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            window.location.href = 'tutorials.html';
+        } else {
+            // Failure
+            alert("Incorrect email or password. Access Denied.");
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('currentUser');
+        window.location.reload();
+    }
+  </script>
+</body>
+</html>

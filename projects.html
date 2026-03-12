@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | CodeVector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(34, 211, 238, 0.4);
+    }
+
+    .dragging {
+      opacity: 0.5;
+      scale: 0.95;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+
+  <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+        <img src="Code Vector.png" alt="CodeVector Logo" class="h-10 w-10 rounded shadow-lg shadow-cyan-500/20">
+        <span class="text-2xl font-extrabold tracking-tight text-white">Code<span class="text-cyan-400">Vector</span></span>
+      </a>
+
+      <div class="hidden lg:flex items-center space-x-10">
+        <ul class="flex space-x-8 text-sm font-semibold tracking-wide uppercase">
+          <li><a href="index.html" class="hover:text-cyan-400 transition text-slate-400">Home</a></li>
+          <li><a href="tutorials.html" class="hover:text-cyan-400 transition text-slate-400">Tutorials</a></li>
+          <li><a href="challenges.html" class="hover:text-cyan-400 transition text-slate-400">Challenges</a></li>
+          <li><a href="projects.html" class="text-cyan-400">Projects</a></li>
+        </ul>
+        
+        <div id="auth-links" class="flex items-center space-x-5">
+          <a href="login.html" class="text-sm font-bold hover:text-white transition text-slate-400">Login</a>
+          <a href="signup.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2.5 rounded-full text-sm font-bold transition">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="py-12 px-6 border-b border-slate-900">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+            <h1 class="text-4xl font-extrabold text-white mb-2">Project <span class="text-cyan-400">Terminal</span></h1>
+            <p class="text-slate-500 text-sm">Deploy, manage, and scale your digital architectures.</p>
+        </div>
+        
+        <div class="flex flex-wrap gap-3">
+            <div class="relative min-w-[300px]">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                <input id="search-bar" type="text" placeholder="Search repositories..." 
+                    class="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-cyan-500 transition">
+            </div>
+            <select id="category-filter" class="bg-slate-900 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-400 focus:outline-none focus:border-cyan-500">
+                <option value="">All Systems</option>
+                <option value="web">Web Services</option>
+                <option value="mobile">Mobile Apps</option>
+                <option value="ai">Neural Nets (AI)</option>
+            </select>
+            <button onclick="openPopup()" class="bg-white text-slate-950 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-cyan-400 transition">
+                New Project <i class="fa-solid fa-plus ml-2"></i>
+            </button>
+        </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto py-12 px-6">
+    <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+
+    <div id="empty-state" class="hidden text-center py-20">
+        <i class="fa-solid fa-box-open text-6xl text-slate-800 mb-6"></i>
+        <h3 class="text-xl font-bold text-slate-400">No projects detected in local storage</h3>
+        <p class="text-slate-600 mt-2">Initialize a new build to get started.</p>
+    </div>
+
+    <div id="bulk-action" class="hidden mt-10 flex justify-center">
+        <button onclick="deleteSelected()" class="bg-red-500/10 text-red-500 border border-red-500/20 px-8 py-3 rounded-xl font-bold hover:bg-red-500 hover:text-white transition uppercase text-xs tracking-widest">
+            Purge Selected Projects
+        </button>
+    </div>
+  </main>
+
+  <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <div class="glass w-full max-w-xl p-10 rounded-[2.5rem] shadow-2xl relative">
+        <button onclick="closePopup()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition">
+            <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+        
+        <h2 class="text-3xl font-black text-white mb-8">Initialize Build</h2>
+        
+        <form id="projectForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2">Project Name</label>
+                    <input type="text" id="p-name" required class="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 px-5 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2">System Category</label>
+                    <select id="p-cat" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 px-5 focus:outline-none focus:border-cyan-500 transition">
+                        <option value="web">Web</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="ai">AI</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2">Architecture Description</label>
+                <textarea id="p-desc" rows="3" required class="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 px-5 focus:outline-none focus:border-cyan-500 transition"></textarea>
+            </div>
+            <div>
+                <label class="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2">Deployment Deadline</label>
+                <input type="date" id="p-date" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 px-5 focus:outline-none focus:border-cyan-500 transition">
+            </div>
+            
+            <button type="submit" class="w-full bg-cyan-500 text-slate-950 font-black py-4 rounded-2xl uppercase tracking-widest shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">
+                Create Repository
+            </button>
+        </form>
+    </div>
+  </div>
+
+  <script>
+    // 1. Navbar Logic
+    function updateNavbar() {
+        const authLinks = document.getElementById('auth-links');
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if (user) {
+            authLinks.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <span class="text-slate-500 text-xs font-bold tracking-widest uppercase">Welcome, ${user.name.split(' ')[0]}</span>
+                    <a href="account.html" class="bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center">
+                        <i class="fa-solid fa-circle-user mr-2 text-cyan-400"></i> Account
+                    </a>
+                </div>
+            `;
+        }
+    }
+    updateNavbar();
+
+    // 2. Project Management Logic
+    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    let selectedSet = new Set();
+
+    const grid = document.getElementById('projects-grid');
+    const emptyState = document.getElementById('empty-state');
+    const bulkBar = document.getElementById('bulk-action');
+
+    function render() {
+        grid.innerHTML = '';
+        selectedSet.clear();
+        bulkBar.classList.add('hidden');
+
+        if (projects.length === 0) {
+            emptyState.classList.remove('hidden');
+            return;
+        }
+        emptyState.classList.add('hidden');
+
+        projects.forEach((proj, idx) => {
+            const isOverdue = proj.deadline && new Date(proj.deadline) < new Date();
+            const card = document.createElement('div');
+            card.className = `project-card bg-slate-900 border border-slate-800 p-8 rounded-[2.5rem] transition-all duration-300 relative group cursor-grab active:cursor-grabbing ${isOverdue ? 'border-red-500/30' : ''}`;
+            card.draggable = true;
+            card.dataset.idx = idx;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center">
+                         <input type="checkbox" class="mr-3 accent-cyan-400 w-4 h-4" onchange="toggleSelect(${idx}, this)">
+                         <span class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 bg-cyan-400/10 px-3 py-1 rounded-full">${proj.category}</span>
+                    </div>
+                    ${isOverdue ? '<span class="text-[10px] font-black text-red-500 uppercase tracking-widest"><i class="fa-solid fa-triangle-exclamation"></i> Overdue</span>' : ''}
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">${proj.name}</h3>
+                <p class="text-slate-500 text-sm mb-8 line-clamp-2">${proj.description}</p>
+                
+                <div class="flex items-center justify-between pt-6 border-t border-slate-800">
+                    <button onclick="renameProject(${idx})" class="text-slate-400 hover:text-white transition text-xs font-bold uppercase tracking-widest">Rename</button>
+                    <button onclick="deleteProject(${idx})" class="text-red-500/40 hover:text-red-500 transition text-xs font-bold uppercase tracking-widest">Delete</button>
+                </div>
+            `;
+            
+            // Go to editor on click (but not on buttons)
+            card.addEventListener('click', (e) => {
+                if(e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
+                    window.location.href = `editor.html?id=${proj.id}`;
+                }
+            });
+
+            grid.appendChild(card);
+            
+            // Drag and Drop implementation
+            card.addEventListener('dragstart', () => card.classList.add('dragging'));
+            card.addEventListener('dragend', () => card.classList.remove('dragging'));
+        });
+    }
+
+    // Modal Controls
+    function openPopup() {
+        const modal = document.getElementById('modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.replace('opacity-0', 'opacity-100'), 10);
+    }
+    function closePopup() {
+        const modal = document.getElementById('modal');
+        modal.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    // Form Handling
+    document.getElementById('projectForm').onsubmit = (e) => {
+        e.preventDefault();
+        const newProj = {
+            id: Date.now(),
+            name: document.getElementById('p-name').value,
+            category: document.getElementById('p-cat').value,
+            description: document.getElementById('p-desc').value,
+            deadline: document.getElementById('p-date').value
+        };
+        projects.push(newProj);
+        localStorage.setItem('projects', JSON.stringify(projects));
+        render();
+        closePopup();
+        e.target.reset();
+    };
+
+    // Actions
+    function deleteProject(idx) {
+        if(confirm("Permanently delete this project repository?")) {
+            projects.splice(idx, 1);
+            localStorage.setItem('projects', JSON.stringify(projects));
+            render();
+        }
+    }
+
+    function renameProject(idx) {
+        const newName = prompt("Rename repository to:", projects[idx].name);
+        if(newName) {
+            projects[idx].name = newName;
+            localStorage.setItem('projects', JSON.stringify(projects));
+            render();
+        }
+    }
+
+    function toggleSelect(idx, checkbox) {
+        if(checkbox.checked) selectedSet.add(idx.toString());
+        else selectedSet.delete(idx.toString());
+        bulkBar.classList.toggle('hidden', selectedSet.size === 0);
+    }
+
+    function deleteSelected() {
+        if(confirm(`Delete ${selectedSet.size} repositories?`)) {
+            projects = projects.filter((_, idx) => !selectedSet.has(idx.toString()));
+            localStorage.setItem('projects', JSON.stringify(projects));
+            render();
+        }
+    }
+
+    // Search and Filter
+    document.getElementById('search-bar').oninput = filterList;
+    document.getElementById('category-filter').onchange = filterList;
+
+    function filterList() {
+        const term = document.getElementById('search-bar').value.toLowerCase();
+        const cat = document.getElementById('category-filter').value;
+        const cards = grid.querySelectorAll('.project-card');
+
+        cards.forEach((card, idx) => {
+            const p = projects[idx];
+            const matchesSearch = p.name.toLowerCase().includes(term) || p.description.toLowerCase().includes(term);
+            const matchesCat = cat === '' || p.category === cat;
+            card.classList.toggle('hidden', !(matchesSearch && matchesCat));
+        });
+    }
+
+    // Drag Order Persistence
+    grid.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(grid, e.clientY);
+        const dragging = document.querySelector('.dragging');
+        if (afterElement == null) {
+            grid.appendChild(dragging);
+        } else {
+            grid.insertBefore(dragging, afterElement);
+        }
+    });
+
+    grid.addEventListener('drop', () => {
+        const newOrder = Array.from(grid.children).map(card => parseInt(card.dataset.idx));
+        projects = newOrder.map(idx => projects[idx]);
+        localStorage.setItem('projects', JSON.stringify(projects));
+        render(); // Refresh indexes
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.project-card:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    render();
+  </script>
+</body>
+</html>
